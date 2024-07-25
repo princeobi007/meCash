@@ -1,9 +1,12 @@
-<mxfile host="app.diagrams.net" modified="2024-07-25T09:52:19.944Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" etag="kKGs1Mhm43kLug--9WYw" version="24.0.0" type="github">
+<mxfile host="app.diagrams.net" modified="2024-07-25T09:54:07.901Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" etag="zGZbqFtYZCbl13Kbo5Ek" version="24.0.0" type="github">
   <diagram name="Page-1" id="l_mch03_H2fgWvcMSi8S">
     <mxGraphModel dx="1266" dy="651" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="IM-L45CHT0sqmJNXlmkT-19" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="130" y="30" width="640" height="640" as="geometry" />
+        </mxCell>
         <mxCell id="IM-L45CHT0sqmJNXlmkT-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0.1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="IM-L45CHT0sqmJNXlmkT-1" target="IM-L45CHT0sqmJNXlmkT-2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -65,6 +68,9 @@
             <mxPoint x="570" y="460" as="sourcePoint" />
             <mxPoint x="620" y="410" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="IM-L45CHT0sqmJNXlmkT-20" value="meCash use-case" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="450" y="50" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

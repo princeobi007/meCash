@@ -77,8 +77,8 @@ As seen in the image above the customer will be able to perform the following fu
 - Transaction: A logged-in user may perform the following transactions
   - A transaction may either be of type `CREDIT` or `DEBIT`
   - A transaction may be one of the following categories:
-    - Deposit: `DEBIT` the till account, `CREDIT` the customer account
-    - Withdrawal: `CREDIT` the till account, `DEBIT` customer account
+    - Deposit: `CREDIT` till with cash transaction `DEBIT` the till account, `CREDIT` the customer account
+    - Withdrawal: `DEBIT` customer account `CREDIT` the till account, `DEBIT` till with cash transaction
     - Transfer: `DEBIT` the initiator `CREDIT` the beneficiary
 
 # Capacity Estimation

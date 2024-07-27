@@ -13,6 +13,7 @@ public record LoginRequest (
 
     @Schema(description = "password", example = "12ueURU@3456")
     @NotBlank(message = "Password cannot be blank")
-    @NotBlank(message = "Password cannot be blank") @Size(min = 8, message = "Password must be at least 8 characters") @Pattern(regexp = "", message = "/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.* ).{8,16}$/")
+    @NotBlank(message = "Password cannot be blank") @Size(min = 8, message = "Password must be at least 8 characters") @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.* ).{8,16}$",
+            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character. Length must be between 8 and 16 characters.")
     String password) {
 }

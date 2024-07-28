@@ -19,7 +19,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,7 +49,6 @@ class AuthServiceTest {
 
     Given given = new Given();
     When when = new When();
-    Then then = new Then();
 
     @BeforeEach
     void setUp() {
@@ -108,7 +106,7 @@ class AuthServiceTest {
 
         public CustomerRegistration customerRegistration(){
             return new CustomerRegistration("08188736817",
-                    "princneobi007@gmail.com", "testP@55", LocalDate.of(1999,06,23),
+                    "princneobi007@gmail.com", "testP@55", LocalDate.of(1999,6,23),
                     "Princewill", "Xander","Cage" ,"12345678901","12345678901");
         }
 
@@ -189,9 +187,5 @@ class AuthServiceTest {
         public void login(LoginRequest loginRequest) {
             sut.login(loginRequest);
         }
-    }
-
-    class Then{
-
     }
 }

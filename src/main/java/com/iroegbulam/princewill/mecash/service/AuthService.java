@@ -39,14 +39,19 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String phone) {
-        return repository.findByLogin(phone);
+        return repository.findByLogin(phone).orElseThrow(()->new BadCredentialsException("Could not load username"));
     }
 
     @Transactional
     public void signup(CustomerRegistration request) {
         String phoneNumber = request.phoneNumber();
-        if (repository.findByLogin(phoneNumber) != null) {
+        if (repository.findByLogin(phoneNumber).isPresent()) {
             throw new DuplicateException(String.format("User with the phone number '%s' already exists.", phoneNumber));
+        }
+
+        Optional<Customer> existingUser = customerRepository.findByPhoneNumber(phoneNumber);
+        if (existingUser.isPresent()) {
+            throw new DuplicateException(String.format("Customer with the phone number '%s' already exists.", phoneNumber));
         }
 
         // create User object
@@ -54,12 +59,7 @@ public class AuthService implements UserDetailsService {
         User newUser = new User(request.phoneNumber(), encryptedPassword, UserRole.USER);
         var createdUser =  repository.save(newUser);
 
-        Optional<Customer> existingUser = customerRepository.findByPhoneNumber(phoneNumber);
-        if (existingUser.isPresent()) {
-            throw new DuplicateException(String.format("Customer with the phone number '%s' already exists.", phoneNumber));
-        }
-
-        //Create CustomerObject
+        //Create customer
         Customer newCustomer = new Customer();
 
         newCustomer.setFirstname(request.firstname());

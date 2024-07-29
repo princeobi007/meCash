@@ -3,13 +3,12 @@ package com.iroegbulam.princewill.mecash.service;
 import com.iroegbulam.princewill.mecash.config.auth.TokenProvider;
 import com.iroegbulam.princewill.mecash.domain.Customer;
 import com.iroegbulam.princewill.mecash.domain.User;
-import com.iroegbulam.princewill.mecash.dto.CustomerRegistration;
-import com.iroegbulam.princewill.mecash.dto.LoginRequest;
+import com.iroegbulam.princewill.mecash.dto.request.CustomerRegistration;
+import com.iroegbulam.princewill.mecash.dto.request.LoginRequest;
 import com.iroegbulam.princewill.mecash.enums.UserRole;
 import com.iroegbulam.princewill.mecash.exception.DuplicateException;
 import com.iroegbulam.princewill.mecash.repository.CustomerRepository;
 import com.iroegbulam.princewill.mecash.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-@Slf4j
+
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 

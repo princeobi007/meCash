@@ -3,13 +3,14 @@ package com.iroegbulam.princewill.mecash.service;
 import com.iroegbulam.princewill.mecash.config.auth.TokenProvider;
 import com.iroegbulam.princewill.mecash.domain.Customer;
 import com.iroegbulam.princewill.mecash.domain.User;
-import com.iroegbulam.princewill.mecash.dto.CustomerRegistration;
-import com.iroegbulam.princewill.mecash.dto.LoginRequest;
-import com.iroegbulam.princewill.mecash.dto.LoginResponse;
+import com.iroegbulam.princewill.mecash.dto.request.CustomerRegistration;
+import com.iroegbulam.princewill.mecash.dto.request.LoginRequest;
+import com.iroegbulam.princewill.mecash.dto.response.LoginResponse;
 import com.iroegbulam.princewill.mecash.enums.UserRole;
 import com.iroegbulam.princewill.mecash.exception.DuplicateException;
 import com.iroegbulam.princewill.mecash.repository.CustomerRepository;
 import com.iroegbulam.princewill.mecash.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
+@Slf4j
 @Service
 public class AuthService implements UserDetailsService {
     private final UserRepository repository;
@@ -71,8 +74,13 @@ public class AuthService implements UserDetailsService {
         newCustomer.setBvn(request.bvn());
         newCustomer.setNin(request.nin());
         newCustomer.setUser(createdUser);
+        newCustomer.setCustomerId(generateCustomerId());
 
-        customerRepository.save(newCustomer);
+        customerRepository.saveAndFlush(newCustomer);
+    }
+
+    private String generateCustomerId() {
+        return UUID.randomUUID().toString();
     }
 
     public LoginResponse login (LoginRequest loginRequest){
@@ -85,4 +93,5 @@ public class AuthService implements UserDetailsService {
             throw new BadCredentialsException("could not find user for credentials");
         }
     }
+
 }

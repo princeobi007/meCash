@@ -1,9 +1,9 @@
 package com.iroegbulam.princewill.mecash.controller;
 
-import com.iroegbulam.princewill.mecash.dto.ApiErrorResponse;
-import com.iroegbulam.princewill.mecash.dto.CustomerRegistration;
-import com.iroegbulam.princewill.mecash.dto.LoginRequest;
-import com.iroegbulam.princewill.mecash.dto.LoginResponse;
+import com.iroegbulam.princewill.mecash.dto.response.ApiErrorResponse;
+import com.iroegbulam.princewill.mecash.dto.request.CustomerRegistration;
+import com.iroegbulam.princewill.mecash.dto.request.LoginRequest;
+import com.iroegbulam.princewill.mecash.dto.response.LoginResponse;
 import com.iroegbulam.princewill.mecash.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

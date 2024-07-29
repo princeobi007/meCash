@@ -1,6 +1,8 @@
 package com.iroegbulam.princewill.mecash.controller;
 
-import com.iroegbulam.princewill.mecash.dto.ApiErrorResponse;
+import com.iroegbulam.princewill.mecash.dto.response.ApiErrorResponse;
+import com.iroegbulam.princewill.mecash.exception.AccountCreationException;
+import com.iroegbulam.princewill.mecash.exception.CurrencyNotSupportedException;
 import com.iroegbulam.princewill.mecash.exception.DuplicateException;
 import com.iroegbulam.princewill.mecash.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +56,17 @@ public class RestExceptionHandler {
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     public ResponseEntity<ApiErrorResponse> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e) {
         return ResponseEntity.status(UNAUTHORIZED).body(new ApiErrorResponse(UNAUTHORIZED.value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(CurrencyNotSupportedException.class)
+    public ResponseEntity<ApiErrorResponse> handleCurrencyNotSupportedException(CurrencyNotSupportedException e) {
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(new ApiErrorResponse(BAD_REQUEST.value(), e.getMessage()));
+    }
+    @ExceptionHandler(AccountCreationException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccountCreationException(AccountCreationException e) {
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(new ApiErrorResponse(BAD_REQUEST.value(), e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

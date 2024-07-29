@@ -18,7 +18,7 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, length = 10)
     private String accountNumber;
     private String accountName;
     @Enumerated(EnumType.STRING)
@@ -40,6 +40,8 @@ public class Account {
     @JoinColumn(name = "created_by_id")
     private User createdBy;
 
+    private String registrationNumber;
+
     private LocalDateTime dateCreated;
 
     private LocalDateTime lastUpdated;
@@ -52,5 +54,14 @@ public class Account {
         this.accountCurrency = accountCurrency;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        dateCreated = LocalDateTime.now();
+        lastUpdated = LocalDateTime.now();
+    }
 
+    @PreUpdate
+    protected void onUpdate() {
+        lastUpdated = LocalDateTime.now();
+    }
 }

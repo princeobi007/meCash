@@ -7,8 +7,10 @@ import java.time.LocalDate;
 
 @Table()
 @Entity(name = "customer")
+@Setter
+@Getter
 @EqualsAndHashCode(of = "id")
-public class Customer{
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -22,15 +24,13 @@ public class Customer{
     private LocalDate dob;
     private String email;
     private String bvn;
+    private String customerId;
     private String nin;
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public Long getId() {
         return id;
     }
+
     public String getFirstname() {
         return firstname;
     }
@@ -57,6 +57,10 @@ public class Customer{
 
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getPhoneNumber() {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iroegbulam.princewill.mecash.config.AuthConfig;
 import com.iroegbulam.princewill.mecash.config.auth.SecurityFilter;
 import com.iroegbulam.princewill.mecash.config.auth.TokenProvider;
-import com.iroegbulam.princewill.mecash.dto.CustomerRegistration;
+import com.iroegbulam.princewill.mecash.dto.request.CustomerRegistration;
 import com.iroegbulam.princewill.mecash.repository.CustomerRepository;
 import com.iroegbulam.princewill.mecash.repository.UserRepository;
 import com.iroegbulam.princewill.mecash.service.AuthService;

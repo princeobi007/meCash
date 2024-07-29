@@ -1,13 +1,11 @@
-package com.iroegbulam.princewill.mecash.dto;
+package com.iroegbulam.princewill.mecash.dto.request;
 
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+
+
 public record CustomerRegistration(@Digits(integer = 11, fraction = 0, message = "Phone number must be digits")
                                    @NotBlank(message = "phone cannot be blank")
                                    @Size(min = 11, max = 11, message = "phone number must be 11 digits") String phoneNumber,

@@ -26,15 +26,15 @@ meCash Design
 - View Transaction History (multi-currency)
 
 # Non-Functional Requirements
-- Security:
+#### Security:
   - Password Security:
-    - password must contain at least one uppercase,lowercase, number, and a special character. Proposed regex will be ```/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/```
+    - password must contain at least one uppercase,lowercase, number, and a special character. Proposed regex will be ```^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$```
     - JWT token will be used for authentication and authorization of requests
-- Audit Trail:
+#### Audit Trail:
   - An audit trail of requests and responses 
   
-- Availability: The system should always be available.
-- Policies in Nigeria:
+#### Availability: The system should always be available.
+#### Policies in Nigeria:
   - Individual Account:
     - An Individual account must have a valid BVN & NIN
   - Corporate Account:

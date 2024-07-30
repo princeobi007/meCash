@@ -222,20 +222,8 @@ class TransactionServiceTest {
             Mockito.when(accountRepository.findByAccountNumber(Mockito.anyString())).thenReturn(Optional.of(depositAccountUSD));
         }
 
-        public void beneficiaryNGNAccountFound() {
-            Mockito.lenient().when(accountRepository.findByAccountNumber("1000000001")).thenReturn(Optional.of(depositAccountNGN));
-        }
-
         public void requestCurrencyIsNGN() {
             Mockito.when(currencyRepository.findByCode("NGN")).thenReturn(Optional.of(ngnCurrency));
-        }
-
-        public void requestCurrencyIsUSD() {
-            Mockito.when(currencyRepository.findByCode("USD")).thenReturn(Optional.of(usdCurrency));
-        }
-
-        public void ngnTillAccount() {
-            Mockito.when(accountRepository.findByAccountNumber("TILL_ACCOUNT_NUM_NGN")).thenReturn(Optional.of(tillAccountNGN));
         }
 
         public void debitAccountNotFound() {

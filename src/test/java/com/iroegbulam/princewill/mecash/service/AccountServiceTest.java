@@ -40,11 +40,8 @@ class AccountServiceTest {
     private CurrencyRepository currencyRepository;
     @Mock
     private CustomerRepository customerRepository;
-
     @Mock
-    SecurityContext securityContext;
-    @Mock
-    Authentication authentication;
+    private MeCashService meCashService;
     @Mock
     EntityManager entityManager;
     AccountService sut;
@@ -56,7 +53,7 @@ class AccountServiceTest {
 
     @BeforeEach
     void setUp() {
-        sut = new AccountService(accountRepository,customerRepository,currencyRepository,entityManager);
+        sut = new AccountService(accountRepository,customerRepository,currencyRepository,meCashService,entityManager);
     }
 
     @Nested
@@ -159,9 +156,7 @@ class AccountServiceTest {
         }
 
         public void logged_in_user() {
-            Mockito.when(authentication.getPrincipal()).thenReturn(new User("LoggedInUser", "test@Pa55", UserRole.USER));
-            Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-            SecurityContextHolder.setContext(securityContext);
+            Mockito.when(meCashService.getCurrentUser()).thenReturn(new User("LoggedInUser", "test@Pa55", UserRole.USER));
         }
 
         public void logged_in_user_profile_found() {

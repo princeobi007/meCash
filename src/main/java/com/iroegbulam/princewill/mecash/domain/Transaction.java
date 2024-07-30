@@ -36,6 +36,7 @@ public class Transaction {
     private LocalDateTime createdAt;
 
     private String transactionRef;
+    private String narration;
 
     @ManyToOne
     @JoinColumn(name = "created_by_id")

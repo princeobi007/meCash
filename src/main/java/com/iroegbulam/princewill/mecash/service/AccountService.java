@@ -17,9 +17,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,6 +29,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
     private final CurrencyRepository currencyRepository;
+    private final MeCashService meCashService;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -63,7 +61,7 @@ public class AccountService {
     }
 
     public AccountBalanceResponse getAccountBalance(){
-        var currentUser = getCurrentUser();
+        var currentUser = meCashService.getCurrentUser();
         var userCustomer = getCustomer(currentUser);
         var accounts = accountRepository.findBySignatories_CustomerId(userCustomer.getCustomerId());
 
@@ -74,7 +72,7 @@ public class AccountService {
     }
 
     public AccountBalanceResponse.AccountDto getAnAccountBalance(String accountNumber) {
-        var currentUser = getCurrentUser();
+        var currentUser = meCashService.getCurrentUser();
         var userCustomer = getCustomer(currentUser);
 
         var account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(()->new NotFoundException(String.format("Account not found: %s",accountNumber)));
@@ -102,7 +100,7 @@ public class AccountService {
         }
 
 
-        var currentUser = getCurrentUser();
+        var currentUser = meCashService.getCurrentUser();
         var userCustomer = getCustomer(currentUser);
         signatoryList.add(userCustomer);
 
@@ -143,16 +141,11 @@ public class AccountService {
         return currencyRepository.findByCode(request.currencyCode()).orElseThrow(() -> new CurrencyNotSupportedException(String.format("%s currency not supported", request.currencyCode())));
     }
 
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            return (User) authentication.getPrincipal();
-        }
-        throw new AccessDeniedException("Kindly confirm user is logged in");
-    }
-
     private String generateAccountNumber() {
-        Long nextVal = (Long) entityManager.createNativeQuery("SELECT nextval('account_number_seq')").getSingleResult();
+        Long nextVal;
+        synchronized (this){
+             nextVal = (Long) entityManager.createNativeQuery("SELECT nextval('account_number_seq')").getSingleResult();
+        }
         return String.format("%010d", nextVal);
     }
 }

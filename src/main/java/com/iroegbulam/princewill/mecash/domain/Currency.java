@@ -28,4 +28,9 @@ public class Currency {
     private double buyPrice;
 
     private double sellPrice;
+
+    @Override
+    public String toString(){
+        return code;
+    }
 }

@@ -5,6 +5,7 @@ import com.iroegbulam.princewill.mecash.domain.Currency;
 import com.iroegbulam.princewill.mecash.domain.Customer;
 import com.iroegbulam.princewill.mecash.domain.User;
 import com.iroegbulam.princewill.mecash.dto.request.AccountCreationRequest;
+import com.iroegbulam.princewill.mecash.dto.response.AccountBalanceResponse;
 import com.iroegbulam.princewill.mecash.dto.response.AccountCreationResponse;
 import com.iroegbulam.princewill.mecash.enums.AccountType;
 import com.iroegbulam.princewill.mecash.exception.*;
@@ -59,6 +60,30 @@ public class AccountService {
         }
 
         return response;
+    }
+
+    public AccountBalanceResponse getAccountBalance(){
+        var currentUser = getCurrentUser();
+        var userCustomer = getCustomer(currentUser);
+        var accounts = accountRepository.findBySignatories_CustomerId(userCustomer.getCustomerId());
+
+        var accountDtoList = accounts.stream().map(account -> new AccountBalanceResponse.AccountDto(account.getAccountNumber()
+                ,account.getAccountName(),account.getAccountCurrency().toString(),account.getAccountType().getName(),
+                account.getAvailableBalance())).toList();
+        return new AccountBalanceResponse(accountDtoList);
+    }
+
+    public AccountBalanceResponse.AccountDto getAnAccountBalance(String accountNumber) {
+        var currentUser = getCurrentUser();
+        var userCustomer = getCustomer(currentUser);
+
+        var account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(()->new NotFoundException(String.format("Account not found: %s",accountNumber)));
+
+        if(!account.getSignatories().contains(userCustomer)){
+            throw new AccessDeniedException(String.format("You are not a signatory to this account : %s",accountNumber));
+        }
+
+        return new AccountBalanceResponse.AccountDto(account.getAccountNumber(),account.getAccountName(),account.getAccountCurrency().toString(),account.getAccountType().getName(),account.getAvailableBalance());
     }
 
 

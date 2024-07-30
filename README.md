@@ -7,3 +7,4 @@ DB_USER=<YOUR_DB_USER>
 DB_NAME=<YOUR_DB_NAME>
 DB_PASSWORD=<DB_PASSWORD>
 ```
+Design notes can be found [here](docs/Design.md)

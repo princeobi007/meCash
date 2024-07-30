@@ -5,6 +5,7 @@ import com.iroegbulam.princewill.mecash.domain.Currency;
 import com.iroegbulam.princewill.mecash.domain.Customer;
 import com.iroegbulam.princewill.mecash.domain.User;
 import com.iroegbulam.princewill.mecash.dto.request.AccountCreationRequest;
+import com.iroegbulam.princewill.mecash.dto.response.AccountBalanceResponse;
 import com.iroegbulam.princewill.mecash.dto.response.AccountCreationResponse;
 import com.iroegbulam.princewill.mecash.enums.AccountType;
 import com.iroegbulam.princewill.mecash.exception.*;
@@ -16,9 +17,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +29,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
     private final CurrencyRepository currencyRepository;
+    private final MeCashService meCashService;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -61,6 +60,30 @@ public class AccountService {
         return response;
     }
 
+    public AccountBalanceResponse getAccountBalance(){
+        var currentUser = meCashService.getCurrentUser();
+        var userCustomer = getCustomer(currentUser);
+        var accounts = accountRepository.findBySignatories_CustomerId(userCustomer.getCustomerId());
+
+        var accountDtoList = accounts.stream().map(account -> new AccountBalanceResponse.AccountDto(account.getAccountNumber()
+                ,account.getAccountName(),account.getAccountCurrency().toString(),account.getAccountType().getName(),
+                account.getAvailableBalance())).toList();
+        return new AccountBalanceResponse(accountDtoList);
+    }
+
+    public AccountBalanceResponse.AccountDto getAnAccountBalance(String accountNumber) {
+        var currentUser = meCashService.getCurrentUser();
+        var userCustomer = getCustomer(currentUser);
+
+        var account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(()->new NotFoundException(String.format("Account not found: %s",accountNumber)));
+
+        if(!account.getSignatories().contains(userCustomer)){
+            throw new AccessDeniedException(String.format("You are not a signatory to this account : %s",accountNumber));
+        }
+
+        return new AccountBalanceResponse.AccountDto(account.getAccountNumber(),account.getAccountName(),account.getAccountCurrency().toString(),account.getAccountType().getName(),account.getAvailableBalance());
+    }
+
 
     private String createGenericAccount(AccountCreationRequest request) {
 
@@ -77,7 +100,7 @@ public class AccountService {
         }
 
 
-        var currentUser = getCurrentUser();
+        var currentUser = meCashService.getCurrentUser();
         var userCustomer = getCustomer(currentUser);
         signatoryList.add(userCustomer);
 
@@ -118,16 +141,11 @@ public class AccountService {
         return currencyRepository.findByCode(request.currencyCode()).orElseThrow(() -> new CurrencyNotSupportedException(String.format("%s currency not supported", request.currencyCode())));
     }
 
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            return (User) authentication.getPrincipal();
-        }
-        throw new AccessDeniedException("Kindly confirm user is logged in");
-    }
-
     private String generateAccountNumber() {
-        Long nextVal = (Long) entityManager.createNativeQuery("SELECT nextval('account_number_seq')").getSingleResult();
+        Long nextVal;
+        synchronized (this){
+             nextVal = (Long) entityManager.createNativeQuery("SELECT nextval('account_number_seq')").getSingleResult();
+        }
         return String.format("%010d", nextVal);
     }
 }

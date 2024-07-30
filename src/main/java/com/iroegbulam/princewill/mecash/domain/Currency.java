@@ -2,6 +2,8 @@ package com.iroegbulam.princewill.mecash.domain;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 
 /** Naira Should not be included in this table as it's the base currency in this application.
@@ -13,6 +15,8 @@ import lombok.EqualsAndHashCode;
  * For the purpose of this assessment currency will be limited to USD, GBP, EURO, YEN, YUAN
  */
 @Table()
+@Getter
+@Setter
 @Entity(name = "currency")
 @EqualsAndHashCode(of = "id")
 public class Currency {
@@ -28,4 +32,9 @@ public class Currency {
     private double buyPrice;
 
     private double sellPrice;
+
+    @Override
+    public String toString(){
+        return code;
+    }
 }

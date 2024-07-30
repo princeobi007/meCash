@@ -40,7 +40,6 @@ public class AuthConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/mecash-docs/**").permitAll()
-                        /*.requestMatchers(HttpMethod.POST, "/api/v1/books").hasRole("ADMIN")*/
                         .anyRequest().authenticated())
                 .authenticationManager(authenticationManager)
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -7,7 +7,8 @@ public enum AccountType {
 
     I("Individual"),
     LLC("LLC"),
-    BN("Business Name");
+    BN("Business Name"),
+    TILL("Till Account");
 
     private final String name;
 

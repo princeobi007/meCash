@@ -14,7 +14,7 @@ meCash Design
 - [High level Design](#high-level-design)
 - [Database Design](#database-design)
 - REST Endpoint
-- Scalability
+
 
 # Functional Requirements
 - Customer Registration (Individual and Corporate)
@@ -209,4 +209,7 @@ the controller in turn routes to appropriate service method which encapsulates t
 logic and interaction with database before returning a result.
 
 # Database Design
+![meCash entity-relationship-diagram](../docs/assets/entity-relationship-diagram.png)
 
+# REST Endpoint
+check out the swagger-ui documentation for the REST endpoints. Instructions on how to access it is on the ```ReadMe.md``` file

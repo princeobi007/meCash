@@ -1,10 +1,12 @@
 package com.iroegbulam.princewill.mecash.service;
 
 import com.iroegbulam.princewill.mecash.domain.*;
+import com.iroegbulam.princewill.mecash.domain.Currency;
 import com.iroegbulam.princewill.mecash.dto.request.DepositRequest;
 import com.iroegbulam.princewill.mecash.dto.request.TransferRequest;
 import com.iroegbulam.princewill.mecash.dto.request.WithdrawalRequest;
 import com.iroegbulam.princewill.mecash.dto.response.DepositResponse;
+import com.iroegbulam.princewill.mecash.dto.response.TransactionDto;
 import com.iroegbulam.princewill.mecash.dto.response.TransferResponse;
 import com.iroegbulam.princewill.mecash.dto.response.WithdrawlResponse;
 import com.iroegbulam.princewill.mecash.enums.*;
@@ -18,9 +20,13 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -135,6 +141,43 @@ public class TransactionService {
         return new TransferResponse(TransactionStatus.SUCCESS, accountRepository.findById(debitAccount.getId()).orElseThrow().getAvailableBalance());
     }
 
+    public Map<String, Object> getTransactionHistory(String accountNumber, LocalDateTime startDate, LocalDateTime endDate, int page, int size) {
+        //validate current user is a signatory to account
+        var account = getCustomerAccount(accountNumber);
+        var currentUser = meCashService.getCurrentUser();
+        var customer = customerRepository.findByUser_Login(currentUser.getLogin())
+                .orElseThrow(() -> new NotFoundException(String.format("No customer profile for user: %s", currentUser.getLogin())));
+
+        if (!account.getSignatories().contains(customer)) {
+            throw new AccessDeniedException(String.format("You are not a signatory to account %s", account.getAccountNumber()));
+        }
+
+        List<TransactionDto> transactionDtoList;
+        Pageable paging = PageRequest.of(page, size);
+        Page<Transaction> transactionPage;
+
+        if (startDate == null || endDate == null) {
+            transactionPage = transactionRepository.findByAccount_AccountNumber(accountNumber, paging);
+        } else {
+            transactionPage = transactionRepository.findByAccount_AccountNumberAndCreatedAtBetween(accountNumber, startDate, endDate, paging);
+        }
+
+        if (transactionPage == null || transactionPage.isEmpty()) {
+            throw new NotFoundException(String.format("No transaction found for account %s", accountNumber));
+        }
+
+        transactionDtoList = transactionPage.getContent().stream().map(transaction -> new TransactionDto(transaction.getTransactionRef(), transaction.getAmount()
+                , transaction.getCurrency().getCode(), transaction.getTransactionType(),
+                transaction.getTransactionCategory(), transaction.getNarration(), transaction.getCreatedAt())).toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("transaction", transactionDtoList);
+        response.put("currentPage", transactionPage.getNumber());
+        response.put("totalItems", transactionPage.getTotalElements());
+        response.put("totalPages", transactionPage.getTotalPages());
+        return response;
+    }
+
     private void creditAccount(Account account, double amount, TransactionCategory transactionCategory, String transactionRef, String narration) {
         //create transaction
         Transaction transaction = new Transaction();
@@ -242,4 +285,6 @@ public class TransactionService {
     private String generateTransactionRef() {
         return UUID.randomUUID().toString();
     }
+
+
 }

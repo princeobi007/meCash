@@ -17,6 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Map;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -52,5 +55,20 @@ public class TransactionController {
     @PutMapping("/transfer")
     public ResponseEntity<TransferResponse> getAccountBalance(@Valid @RequestBody TransferRequest transferRequest) {
         return ResponseEntity.ok(transactionService.transfer(transferRequest));
+    }
+
+    @Operation(summary = "get transaction history")
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+    @PutMapping("/history")
+    public ResponseEntity<Map<String, Object>> getTransactionHistory(
+            @RequestParam String accountNumber,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate) {
+        return ResponseEntity.ok(transactionService.getTransactionHistory(accountNumber,startDate,endDate,page,size));
     }
 }

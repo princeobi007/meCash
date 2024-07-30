@@ -1,6 +1,6 @@
 Please create a `env.properties` file in the root of the application
 
-Provide the following files in the `env.properties` file
+Provide the following properties in the `env.properties` file
 
 ```agsl
 DB_USER=<YOUR_DB_USER>
